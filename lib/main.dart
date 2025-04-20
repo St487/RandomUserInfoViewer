@@ -30,7 +30,7 @@ class _SplashscreenState extends State<Splashscreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Userinfo()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Userinfo()));// Navigate to Userinfo screen after 5 seconds
     });
   }
   @override

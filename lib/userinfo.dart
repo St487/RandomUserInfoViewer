@@ -29,6 +29,13 @@ class _UserinfoState extends State<Userinfo> {
   String errorMessage = '';
 
   @override
+  void initState() {
+    super.initState();
+    // TODO: implement initState
+    userInfo();// Fetch user info when the widget is initialized
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[100],
@@ -41,7 +48,7 @@ class _UserinfoState extends State<Userinfo> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Container(
-              height: 900, // or whatever size fits your design
+              height: 900,
               width: 600,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -134,14 +141,14 @@ class _UserinfoState extends State<Userinfo> {
                       ),
                     ],
                     if (errorMessage.isNotEmpty) ...[
-                    Text(errorMessage, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 20),
-                  ],
+                      Text(errorMessage, style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),// Error message if user data fails to load
+                      SizedBox(height: 20),
+                    ],
                     SizedBox(
                       width: 300,
-                      child: ElevatedButton(onPressed: onPressed, child: Text('Load User'))
+                      child: ElevatedButton(onPressed: userInfo, child: Text('Load Another User'))// Button to load another user
                     ),
-                  ],
+                  ],//children
                 ),
               ),
             ),
@@ -150,14 +157,13 @@ class _UserinfoState extends State<Userinfo> {
       );
   }
 
-  Future<void> onPressed() async {
+  Future<void> userInfo() async {
     var response = 
-      await http.get(Uri.parse('http://randomuser.me/api/'));
-    //log(response.statusCode.toString());
-    //log(response.body.toString());
+      await http.get(Uri.parse('http://randomuser.me/api/'));// API call to fetch random user data
     if(response.statusCode == 200){
-      isUserLoaded = true;
-      var data = json.decode(response.body);
+      isUserLoaded = true;// Set user loaded to true
+      var data = json.decode(response.body);// Decode the response body
+      // Extract user data from the response
       gender = (data['results'][0]['gender']);
       name = (data['results'][0]['name']['title']
               + ' ' + data['results'][0]['name']['first']
@@ -170,17 +176,17 @@ class _UserinfoState extends State<Userinfo> {
                   + ' ,' + data['results'][0]['location']['country']);
       email = (data['results'][0]['email']);
       username = (data['results'][0]['login']['username']);
-      DateTime birthDate = DateTime.parse(data['results'][0]['dob']['date']);
+      DateTime birthDate = DateTime.parse(data['results'][0]['dob']['date']);// Parse the birth date
+      // Format the birth date to 'yyyy-MM-dd'
       birth = DateFormat('yyyy-MM-dd').format(birthDate);
       age = (data['results'][0]['dob']['age'].toString());
       phone = (data['results'][0]['phone']);
       cell = (data['results'][0]['cell']);
-      imageUrl = data['results'][0]['picture']['large'];
-      errorMessage = '';
+      imageUrl = data['results'][0]['picture']['large'];// Get the image URL
+      errorMessage = ''; // Reset error message
       setState(() {});
     } else {
-
-      setState(() {errorMessage = 'Failed to load user data. Please try again later.';});
+      setState(() {errorMessage = 'Failed to load user data. Please try again later.';});// Set error message if API call fails
     }
   }
 }
